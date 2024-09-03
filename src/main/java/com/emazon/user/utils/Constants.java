@@ -6,15 +6,12 @@ public class Constants {
     }
 
     public static final String UTILITY_CLASS_SHOULD_NOT_BE_INSTANTIATED = "Utility class should not be instantiated";
-
-
+    
     public static final int MAX_USER_PHONE_CHARACTERS = 13;
     public static final int MIN_USER_PASSWORD_CHARACTERS = 8;
 
     //Roles names
-    public static String ROLE_CLIENT = "Cliente";
-    public static String ROLE_WAREHOUSEASSISTANT = "Aux_bodega";
-
+    public static final String ROLE_WAREHOUSEASSISTANT = "Aux_bodega";
 
     //Exceptions messages
     public static final String RESPONSE_MESSAGE_KEY = "Message";
