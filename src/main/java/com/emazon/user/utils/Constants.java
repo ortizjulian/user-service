@@ -11,6 +11,11 @@ public class Constants {
     public static final int MAX_USER_PHONE_CHARACTERS = 13;
     public static final int MIN_USER_PASSWORD_CHARACTERS = 8;
 
+    //Roles names
+    public static String ROLE_CLIENT = "Cliente";
+    public static String ROLE_WAREHOUSEASSISTANT = "Aux_bodega";
+
+
     //Exceptions messages
     public static final String RESPONSE_MESSAGE_KEY = "Message";
     public static final String EXCEPTION_INVALID_JSON_FORMAT = "Invalid JSON format";
@@ -29,11 +34,10 @@ public class Constants {
     public static final String EXCEPTION_USER_PHONE_MAX_LENGTH = "Phone number must be no more than 13 characters long";
     public static final String EXCEPTION_USER_PHONE_INVALID = "Phone must contain only numbers and an optional leading '+'";
     public static final String EXCEPTION_USER_BIRTHDATE_MANDATORY = "Birthdate is mandatory";
-    public static final String EXCEPTION_USER_ROLE_ID_MANDATORY = "Role ID is mandatory";
     public static final String EXCEPTION_AGE_NOT_VALID= "User must be at least 18 years old.";
     public static final String EXCEPTION_DOCUMENT_ALREADY_EXISTS = "Document already exists: ";
     public static final String EXCEPTION_EMAIL_ALREADY_EXISTS = "Email already exists: ";
     //Role Exceptions
-    public static final String EXCEPTION_ROLE_NOT_FOUND_BY_ID = "Role not found with ID: ";
+    public static final String EXCEPTION_ROLE_NOT_FOUND = "Role not found";
 
 }

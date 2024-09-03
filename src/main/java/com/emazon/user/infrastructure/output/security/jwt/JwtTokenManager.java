@@ -1,6 +1,6 @@
 package com.emazon.user.infrastructure.output.security.jwt;
 
-import com.emazon.user.infrastructure.output.jpa.entity.UserEntity;
+import com.emazon.user.infrastructure.output.security.entity.SecurityUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,11 +20,11 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtAdapter {
+public class JwtTokenManager {
     @Value("${jwt.secret.key}")
     private String secretKey;
 
-    public String getToken(UserEntity user){
+    public String getToken(SecurityUser user){
         return generateToken(new HashMap<>(),user);
     }
 
@@ -67,7 +67,6 @@ public class JwtAdapter {
         return (username.equals(userDetails.getUsername()));
     }
 
-
     private Claims extractAllClaims(String token) throws SignatureException {
         try {
             return Jwts
@@ -81,8 +80,4 @@ public class JwtAdapter {
             return Jwts.claims();
         }
     }
-
-
-
-
 }

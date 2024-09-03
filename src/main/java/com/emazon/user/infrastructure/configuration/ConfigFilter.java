@@ -1,4 +1,4 @@
-package com.emazon.user.infrastructure.output.security.config;
+package com.emazon.user.infrastructure.configuration;
 
 import com.emazon.user.infrastructure.output.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class ConfigFilter {
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
                                 .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
