@@ -1,4 +1,99 @@
 package com.emazon.user.infrastructure.configuration;
 
+import com.emazon.user.domain.api.IAuthenticationServicePort;
+import com.emazon.user.domain.spi.IAuthenticationPersistencePort;
+import com.emazon.user.domain.spi.IRolePersistencePort;
+import com.emazon.user.domain.spi.ISecurityPersistencePort;
+import com.emazon.user.domain.spi.IUserPersistencePort;
+import com.emazon.user.domain.usecase.AuthenticationUseCase;
+import com.emazon.user.infrastructure.output.jpa.adapter.AuthenticationJpaAdapter;
+import com.emazon.user.infrastructure.output.jpa.adapter.RoleJpaAdapter;
+import com.emazon.user.infrastructure.output.jpa.adapter.UserJpaAdapter;
+import com.emazon.user.infrastructure.output.jpa.entity.UserEntity;
+import com.emazon.user.infrastructure.output.jpa.mapper.RoleEntityMapper;
+import com.emazon.user.infrastructure.output.jpa.mapper.UserEntityMapper;
+import com.emazon.user.infrastructure.output.jpa.repository.IRoleRepository;
+import com.emazon.user.infrastructure.output.jpa.repository.IUserRepository;
+import com.emazon.user.infrastructure.output.security.adapter.SecurityAdapter;
+import com.emazon.user.infrastructure.output.security.entity.SecurityUser;
+import com.emazon.user.infrastructure.output.security.jwt.JwtTokenManager;
+import com.emazon.user.utils.Constants;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Configuration
+@RequiredArgsConstructor
 public class BeanConfiguration {
+
+    private final IUserRepository userRepository;
+    private final IRoleRepository roleRepository;
+    private final UserEntityMapper userEntityMapper;
+    private final RoleEntityMapper roleEntityMapper;
+    private final JwtTokenManager jwtTokenManager;
+
+    @Bean
+    public IAuthenticationPersistencePort authenticationPersistencePort(){
+        return new AuthenticationJpaAdapter(userRepository,roleRepository,userEntityMapper);
+    }
+    @Bean
+    public IRolePersistencePort rolePersistencePort(){
+        return new RoleJpaAdapter(roleRepository,roleEntityMapper);
+    }
+
+    @Bean
+    public IUserPersistencePort userPersistencePort(){
+        return new UserJpaAdapter(userRepository);
+    }
+
+    @Bean
+    public ISecurityPersistencePort securityPersistencePort(){
+        return new SecurityAdapter(encoder(),jwtTokenManager);
+    }
+
+    @Bean
+    public IAuthenticationServicePort authenticationServicePort(){
+        return new AuthenticationUseCase(authenticationPersistencePort(), rolePersistencePort(),userPersistencePort(),securityPersistencePort() );
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> {
+            UserEntity userEntity = userRepository.findByEmail(username)
+                    .orElseThrow(() -> new UsernameNotFoundException(Constants.EXCEPTION_USER_NOT_FOUND));
+            Set<String> role = new HashSet<>();
+            role.add(userEntity.getRoleEntity().getName());
+            return new SecurityUser(userEntity.getEmail(), role);
+        };
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(encoder());
+        return authProvider;
+    }
+
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
