@@ -9,8 +9,11 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
+
 public interface UserEntityMapper {
-    @Mapping(target = "password", ignore = true)
     @Mapping(target = "roleEntity", ignore = true)
     UserEntity toEntity(User article);
+
+    @Mapping(source = "roleEntity", target = "role")
+    User toUser(UserEntity userEntity);
 }

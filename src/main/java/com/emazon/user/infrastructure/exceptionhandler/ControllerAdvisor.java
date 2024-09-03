@@ -42,7 +42,7 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> handleRoleNotFoundException(
             RoleNotFoundException roleNotFoundException) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Collections.singletonMap(MESSAGE, roleNotFoundException.getMessage()));
+                .body(Collections.singletonMap(MESSAGE, ExceptionResponse.ROLE_NOT_FOUND.getMessage()));
     }
 
 

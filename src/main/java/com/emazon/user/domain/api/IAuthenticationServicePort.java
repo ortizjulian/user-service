@@ -4,6 +4,6 @@ import com.emazon.user.domain.model.Authentication;
 import com.emazon.user.domain.model.User;
 
 public interface IAuthenticationServicePort {
-    Authentication register(User user);
+    Authentication register(User user, String roleName);
 
 }

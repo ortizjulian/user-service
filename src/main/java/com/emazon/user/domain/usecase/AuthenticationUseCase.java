@@ -6,9 +6,11 @@ import com.emazon.user.domain.exceptions.DocumentAlreadyExistsException;
 import com.emazon.user.domain.exceptions.EmailAlreadyExistsException;
 import com.emazon.user.domain.exceptions.RoleNotFoundException;
 import com.emazon.user.domain.model.Authentication;
+import com.emazon.user.domain.model.Role;
 import com.emazon.user.domain.model.User;
 import com.emazon.user.domain.spi.IAuthenticationPersistencePort;
 import com.emazon.user.domain.spi.IRolePersistencePort;
+import com.emazon.user.domain.spi.ISecurityPersistencePort;
 import com.emazon.user.domain.spi.IUserPersistencePort;
 import com.emazon.user.utils.Constants;
 
@@ -20,19 +22,17 @@ public class AuthenticationUseCase implements IAuthenticationServicePort {
     private final IAuthenticationPersistencePort authenticationPersistencePort;
     private final IRolePersistencePort rolePersistencePort;
     private final IUserPersistencePort userPersistencePort;
+    private final ISecurityPersistencePort securityPersistencePort;
 
-    public AuthenticationUseCase(IAuthenticationPersistencePort authenticationPersistencePort, IRolePersistencePort rolePersistencePort, IUserPersistencePort userPersistencePort) {
+    public AuthenticationUseCase(IAuthenticationPersistencePort authenticationPersistencePort, IRolePersistencePort rolePersistencePort, IUserPersistencePort userPersistencePort, ISecurityPersistencePort securityPersistencePort) {
         this.authenticationPersistencePort = authenticationPersistencePort;
         this.rolePersistencePort = rolePersistencePort;
         this.userPersistencePort = userPersistencePort;
+        this.securityPersistencePort = securityPersistencePort;
     }
 
     @Override
-    public Authentication register(User user) {
-
-        if(!rolePersistencePort.existsById(user.getRoleId())) {
-            throw new RoleNotFoundException(Constants.EXCEPTION_ROLE_NOT_FOUND_BY_ID + user.getRoleId());
-        }
+    public Authentication register(User user, String roleName) {
 
         if (userPersistencePort.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyExistsException(Constants.EXCEPTION_EMAIL_ALREADY_EXISTS + user.getEmail());
@@ -47,7 +47,13 @@ public class AuthenticationUseCase implements IAuthenticationServicePort {
         if(!isAdult) {
             throw new AgeNotValidException();
         }
+        Role role = rolePersistencePort.findByName(roleName).orElseThrow(RoleNotFoundException::new);
 
-        return authenticationPersistencePort.register(user);
+        user.setRole(role);
+
+        user.setPassword(securityPersistencePort.encryptPassword(user.getPassword()));
+        User savedUser =  authenticationPersistencePort.register(user);
+
+        return securityPersistencePort.getToken(savedUser);
     }
 }

@@ -11,9 +11,9 @@ public class User {
     private String document;
     private String phone;
     private LocalDate birthDate;
-    private Long roleId;
+    private Role role;
 
-    public User(Long id, String name, String lastName, String password, String email, String document, String phone, LocalDate birthDate, Long roleId) {
+    public User(Long id, String name, String lastName, String password, String email, String document, String phone, LocalDate birthDate, Role role) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -22,7 +22,7 @@ public class User {
         this.document = document;
         this.phone = phone;
         this.birthDate = birthDate;
-        this.roleId = roleId;
+        this.role = role;
     }
 
     public Long getId() {
@@ -89,11 +89,11 @@ public class User {
         this.birthDate = birthDate;
     }
 
-    public Long getRoleId() {
-        return roleId;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
