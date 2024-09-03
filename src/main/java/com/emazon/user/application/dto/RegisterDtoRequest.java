@@ -33,7 +33,7 @@ public class RegisterDtoRequest {
     @NotNull(message = Constants.EXCEPTION_USER_BIRTHDATE_MANDATORY)
     private LocalDate birthDate;
 
-    public RegisterDtoRequest(String name, String lastName, String password, String email, String document, String phone, LocalDate birthDate, Long roleId) {
+    public RegisterDtoRequest(String name, String lastName, String password, String email, String document, String phone, LocalDate birthDate) {
         this.name = name;
         this.lastName = lastName;
         this.password = password;

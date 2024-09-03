@@ -5,7 +5,6 @@ import com.emazon.user.application.dto.RegisterDtoRequest;
 import com.emazon.user.application.mapper.AuthenticationDtoResponseMapper;
 import com.emazon.user.application.mapper.RegisterDtoRequestMapper;
 import com.emazon.user.domain.api.IAuthenticationServicePort;
-import com.emazon.user.domain.model.Role;
 import com.emazon.user.domain.model.User;
 import com.emazon.user.utils.Constants;
 import lombok.RequiredArgsConstructor;
