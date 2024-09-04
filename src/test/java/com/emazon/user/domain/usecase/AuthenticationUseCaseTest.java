@@ -6,7 +6,6 @@ import com.emazon.user.domain.exceptions.EmailAlreadyExistsException;
 import com.emazon.user.domain.model.Authentication;
 import com.emazon.user.domain.model.Role;
 import com.emazon.user.domain.model.User;
-import com.emazon.user.domain.spi.IAuthenticationPersistencePort;
 import com.emazon.user.domain.spi.IRolePersistencePort;
 import com.emazon.user.domain.spi.ISecurityPersistencePort;
 import com.emazon.user.domain.spi.IUserPersistencePort;
@@ -30,9 +29,6 @@ class AuthenticationUseCaseTest {
 
     @Mock
     private IRolePersistencePort rolePersistencePort;
-
-    @Mock
-    private IAuthenticationPersistencePort authenticationPersistencePort;
 
     @Mock
     private ISecurityPersistencePort securityPersistencePort;
@@ -61,7 +57,7 @@ class AuthenticationUseCaseTest {
         Mockito.when(userPersistencePort.existsByEmail("julian.ortiz@gmail.com")).thenReturn(false);
         Mockito.when(userPersistencePort.existsByDocument("10203040")).thenReturn(false);
         Mockito.when(securityPersistencePort.encryptPassword("SEGURA")).thenReturn("encryptedPassword");
-        Mockito.when(authenticationPersistencePort.register(user)).thenReturn(user);
+        Mockito.when(userPersistencePort.register(user)).thenReturn(user);
         Mockito.when(securityPersistencePort.getToken(user)).thenReturn(new Authentication("token"));
         Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSEASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
         Authentication response = authenticationUseCase.register(user, Constants.ROLE_WAREHOUSEASSISTANT);

@@ -10,6 +10,9 @@ public class Constants {
     public static final int MAX_USER_PHONE_CHARACTERS = 13;
     public static final int MIN_USER_PASSWORD_CHARACTERS = 8;
 
+    //Auth
+    public static final String EXCEPTION_INVALID_CREDENTIALS = "Invalid credentials provided";
+    public static final String EXCEPTION_AUTHENTICATION_EXCEPTION = "Authentication exception occurred";
     //Roles names
     public static final String ROLE_WAREHOUSEASSISTANT = "Aux_bodega";
 
