@@ -2,9 +2,7 @@ package com.emazon.user.application.handler;
 
 import com.emazon.user.application.dto.AuthenticationDtoResponse;
 import com.emazon.user.application.dto.LoginDto;
-import com.emazon.user.application.dto.RegisterDtoRequest;
 
 public interface IAuthenticationHandler {
-    AuthenticationDtoResponse registerWareHouseAssistan(RegisterDtoRequest requisterRequest);
     AuthenticationDtoResponse login(LoginDto loginDto);
 }
