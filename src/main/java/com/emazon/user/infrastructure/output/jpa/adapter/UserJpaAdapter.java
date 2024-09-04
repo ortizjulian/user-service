@@ -1,6 +1,5 @@
 package com.emazon.user.infrastructure.output.jpa.adapter;
 
-import com.emazon.user.domain.model.Role;
 import com.emazon.user.domain.model.User;
 import com.emazon.user.domain.spi.IUserPersistencePort;
 import com.emazon.user.infrastructure.output.jpa.entity.RoleEntity;

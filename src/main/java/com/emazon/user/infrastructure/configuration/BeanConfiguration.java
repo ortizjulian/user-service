@@ -1,10 +1,12 @@
 package com.emazon.user.infrastructure.configuration;
 
 import com.emazon.user.domain.api.IAuthenticationServicePort;
+import com.emazon.user.domain.api.IUserServicePort;
 import com.emazon.user.domain.spi.IRolePersistencePort;
 import com.emazon.user.domain.spi.ISecurityPersistencePort;
 import com.emazon.user.domain.spi.IUserPersistencePort;
 import com.emazon.user.domain.usecase.AuthenticationUseCase;
+import com.emazon.user.domain.usecase.UserUseCase;
 import com.emazon.user.infrastructure.output.jpa.adapter.RoleJpaAdapter;
 import com.emazon.user.infrastructure.output.jpa.adapter.UserJpaAdapter;
 import com.emazon.user.infrastructure.output.jpa.entity.UserEntity;
@@ -54,7 +56,12 @@ public class BeanConfiguration {
 
     @Bean
     public IAuthenticationServicePort authenticationServicePort() throws Exception {
-        return new AuthenticationUseCase(rolePersistencePort(),userPersistencePort(),securityPersistencePort() );
+        return new AuthenticationUseCase(userPersistencePort(),securityPersistencePort() );
+    }
+
+    @Bean
+    public IUserServicePort userServicePort() throws Exception {
+        return new UserUseCase(rolePersistencePort(),userPersistencePort(),securityPersistencePort());
     }
 
     @Bean
