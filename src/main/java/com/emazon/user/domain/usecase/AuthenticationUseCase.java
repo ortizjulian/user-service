@@ -1,14 +1,11 @@
 package com.emazon.user.domain.usecase;
 
 import com.emazon.user.domain.api.IAuthenticationServicePort;
-import com.emazon.user.domain.exceptions.AgeNotValidException;
-import com.emazon.user.domain.exceptions.DocumentAlreadyExistsException;
-import com.emazon.user.domain.exceptions.EmailAlreadyExistsException;
-import com.emazon.user.domain.exceptions.RoleNotFoundException;
+import com.emazon.user.domain.exceptions.*;
 import com.emazon.user.domain.model.Authentication;
+import com.emazon.user.domain.model.Login;
 import com.emazon.user.domain.model.Role;
 import com.emazon.user.domain.model.User;
-import com.emazon.user.domain.spi.IAuthenticationPersistencePort;
 import com.emazon.user.domain.spi.IRolePersistencePort;
 import com.emazon.user.domain.spi.ISecurityPersistencePort;
 import com.emazon.user.domain.spi.IUserPersistencePort;
@@ -16,16 +13,15 @@ import com.emazon.user.utils.Constants;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Optional;
 
 public class AuthenticationUseCase implements IAuthenticationServicePort {
 
-    private final IAuthenticationPersistencePort authenticationPersistencePort;
     private final IRolePersistencePort rolePersistencePort;
     private final IUserPersistencePort userPersistencePort;
     private final ISecurityPersistencePort securityPersistencePort;
 
-    public AuthenticationUseCase(IAuthenticationPersistencePort authenticationPersistencePort, IRolePersistencePort rolePersistencePort, IUserPersistencePort userPersistencePort, ISecurityPersistencePort securityPersistencePort) {
-        this.authenticationPersistencePort = authenticationPersistencePort;
+    public AuthenticationUseCase( IRolePersistencePort rolePersistencePort, IUserPersistencePort userPersistencePort, ISecurityPersistencePort securityPersistencePort) {
         this.rolePersistencePort = rolePersistencePort;
         this.userPersistencePort = userPersistencePort;
         this.securityPersistencePort = securityPersistencePort;
@@ -52,8 +48,22 @@ public class AuthenticationUseCase implements IAuthenticationServicePort {
         user.setRole(role);
 
         user.setPassword(securityPersistencePort.encryptPassword(user.getPassword()));
-        User savedUser =  authenticationPersistencePort.register(user);
+        User savedUser =  userPersistencePort.register(user);
 
         return securityPersistencePort.getToken(savedUser);
+    }
+
+    @Override
+    public Authentication login(Login login) {
+        Optional<User> authUser= userPersistencePort.findByEmail(login.getEmail());
+
+        if(authUser.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
+        securityPersistencePort.authenthicate(login);
+
+        return securityPersistencePort.getToken(authUser.get());
+
     }
 }

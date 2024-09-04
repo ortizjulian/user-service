@@ -11,13 +11,24 @@ import java.util.Set;
 
 @Data
 public class SecurityUser implements UserDetails {
-
+    private Long id;
     private String email;
+    private String password;
     private Set<String> roles;
 
-    public SecurityUser(String email, Set<String> roles) {
+    public SecurityUser(Long id, String email, String password, Set<String> roles) {
+        this.id = id;
         this.email = email;
+        this.password = password;
         this.roles = roles;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
@@ -29,7 +40,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return password;
     }
 
     @Override

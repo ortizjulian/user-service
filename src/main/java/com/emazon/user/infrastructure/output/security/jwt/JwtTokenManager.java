@@ -30,7 +30,7 @@ public class JwtTokenManager {
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            @NotNull UserDetails userDetails
+            @NotNull SecurityUser userDetails
 
     ) {
         String role = userDetails.getAuthorities()
@@ -42,6 +42,7 @@ public class JwtTokenManager {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .claim("role",role )
+                .claim("id", userDetails.getId())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)

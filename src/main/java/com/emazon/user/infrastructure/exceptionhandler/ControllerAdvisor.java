@@ -1,9 +1,8 @@
 package com.emazon.user.infrastructure.exceptionhandler;
 
-import com.emazon.user.domain.exceptions.AgeNotValidException;
-import com.emazon.user.domain.exceptions.DocumentAlreadyExistsException;
-import com.emazon.user.domain.exceptions.EmailAlreadyExistsException;
-import com.emazon.user.domain.exceptions.RoleNotFoundException;
+import com.emazon.user.domain.exceptions.*;
+import com.emazon.user.infrastructure.exceptions.AuthenticationException;
+import com.emazon.user.infrastructure.exceptions.InvalidCredentialsException;
 import com.emazon.user.utils.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +44,6 @@ public class ControllerAdvisor {
                 .body(Collections.singletonMap(MESSAGE, ExceptionResponse.ROLE_NOT_FOUND.getMessage()));
     }
 
-
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -64,4 +62,21 @@ public class ControllerAdvisor {
                 .body(Collections.singletonMap(MESSAGE, documentAlreadyExistsException.getMessage()));
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException userNotFound) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap(MESSAGE, ExceptionResponse.USER_NOT_FOUND.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<Object> handleInvalidCredentialsException(InvalidCredentialsException invalidCredentials) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Collections.singletonMap(MESSAGE, ExceptionResponse.INVALID_CREDENTIALS.getMessage()));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException authenticationException) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Collections.singletonMap(MESSAGE, ExceptionResponse.AUTHENTICATION_EXCEPTION.getMessage()));
+    }
 }
