@@ -41,7 +41,7 @@ class UserUseCaseTest {
     }
 
     @Test
-    void AuthenticationUseCae_Register_ShouldCallSaveOnPersistencePort() {
+    void AuthenticationUseCase_Register_WhenCalled_ShouldCallSaveOnPersistencePort() {
         User user = new User(
                 null,
                 "Julian",
@@ -64,7 +64,7 @@ class UserUseCaseTest {
     }
 
     @Test
-    void AuthenticationUseCase_Register_ShouldThrowExceptionWhenUserIsNotAdult() {
+    void AuthenticationUseCase_Register_WhenUserIsNotAdult_ShouldThrowExceptionAgeNotValid() {
         User user = new User(
                 null,
                 "Julian",
@@ -89,7 +89,7 @@ class UserUseCaseTest {
     }
 
     @Test
-    void AuthenticationUseCase_Register_ShouldThrowExceptionWhenEmailAlreadyExists() {
+    void AuthenticationUseCase_Register_WhenEmailAlreadyExists_ShouldThrowExceptionEmailAlreadyExists() {
         User user = new User(
                 null,
                 "Julian",
@@ -112,7 +112,7 @@ class UserUseCaseTest {
     }
 
     @Test
-    void AuthenticationUseCase_Register_ShouldThrowExceptionWhenDocumentAlreadyExists() {
+    void AuthenticationUseCase_Register_WhenDocumentAlreadyExists_ShouldThrowExceptionExceptionDocumentAlreadyExists() {
         User user = new User(
                 null,
                 "Julian",
