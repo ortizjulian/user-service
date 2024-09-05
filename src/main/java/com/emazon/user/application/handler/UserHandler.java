@@ -22,7 +22,7 @@ public class UserHandler implements IUserHandler {
     @Override
     public User registerWareHouseAssistan(RegisterDtoRequest registerRequest) {
         User user = registerDtoRequestMapper.registerDtoRequestToUser(registerRequest);
-        return userServicePort.register(user, Constants.ROLE_WAREHOUSEASSISTANT);
+        return userServicePort.register(user, Constants.ROLE_WAREHOUSE_ASSISTANT);
 
     }
 }
