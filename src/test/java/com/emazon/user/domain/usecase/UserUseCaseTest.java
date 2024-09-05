@@ -3,7 +3,6 @@ package com.emazon.user.domain.usecase;
 import com.emazon.user.domain.exceptions.AgeNotValidException;
 import com.emazon.user.domain.exceptions.DocumentAlreadyExistsException;
 import com.emazon.user.domain.exceptions.EmailAlreadyExistsException;
-import com.emazon.user.domain.model.Authentication;
 import com.emazon.user.domain.model.Role;
 import com.emazon.user.domain.model.User;
 import com.emazon.user.domain.spi.IRolePersistencePort;
@@ -58,7 +57,7 @@ class UserUseCaseTest {
         Mockito.when(userPersistencePort.existsByDocument("10203040")).thenReturn(false);
         Mockito.when(securityPersistencePort.encryptPassword("SEGURA")).thenReturn("encryptedPassword");
         Mockito.when(userPersistencePort.register(user)).thenReturn(user);
-        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSEASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
+        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSE_ASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
 
         User registeredUser = userPersistencePort.register(user);
         assertEquals(user, registeredUser);
@@ -81,10 +80,10 @@ class UserUseCaseTest {
         Mockito.when(userPersistencePort.existsByEmail("julian.ortiz@gmail.com")).thenReturn(false);
         Mockito.when(userPersistencePort.existsByDocument("10203040")).thenReturn(false);
         Mockito.when(securityPersistencePort.encryptPassword("SEGURA")).thenReturn("encryptedPassword");
-        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSEASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
+        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSE_ASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
 
         assertThrows(AgeNotValidException.class, () -> {
-            userUseCase.register(user, Constants.ROLE_WAREHOUSEASSISTANT);
+            userUseCase.register(user, Constants.ROLE_WAREHOUSE_ASSISTANT);
         });
 
     }
@@ -103,13 +102,12 @@ class UserUseCaseTest {
                 null
         );
 
-        Mockito.when(userPersistencePort.existsByEmail("julian.ortiz@gmail.com")).thenReturn(true); // Correo ya existe
-        Mockito.when(userPersistencePort.existsByDocument("10203040")).thenReturn(false);
-        Mockito.when(securityPersistencePort.encryptPassword("SEGURA")).thenReturn("encryptedPassword");
-        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSEASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
+        Mockito.when(userPersistencePort.existsByEmail("julian.ortiz@gmail.com")).thenReturn(true);
+
+        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSE_ASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
 
        assertThrows(EmailAlreadyExistsException.class, () -> {
-           userUseCase.register(user, Constants.ROLE_WAREHOUSEASSISTANT);
+           userUseCase.register(user, Constants.ROLE_WAREHOUSE_ASSISTANT);
         });
     }
 
@@ -128,12 +126,11 @@ class UserUseCaseTest {
         );
 
         Mockito.when(userPersistencePort.existsByEmail("julian.ortiz@gmail.com")).thenReturn(false);
-        Mockito.when(userPersistencePort.existsByDocument("10203040")).thenReturn(true); // Documento ya existe
-        Mockito.when(securityPersistencePort.encryptPassword("SEGURA")).thenReturn("encryptedPassword");
-        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSEASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
+        Mockito.when(userPersistencePort.existsByDocument("10203040")).thenReturn(true);
+        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSE_ASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
 
         assertThrows(DocumentAlreadyExistsException.class, () -> {
-            userUseCase.register(user, Constants.ROLE_WAREHOUSEASSISTANT);
+            userUseCase.register(user, Constants.ROLE_WAREHOUSE_ASSISTANT);
         });
 
     }

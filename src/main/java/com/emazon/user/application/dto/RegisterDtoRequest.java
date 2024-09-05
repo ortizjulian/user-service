@@ -22,12 +22,12 @@ public class RegisterDtoRequest {
     private String email;
 
     @NotBlank(message = Constants.EXCEPTION_USER_DOCUMENT_MANDATORY)
-    @Pattern(regexp = "\\d+", message = Constants.EXCEPTION_USER_DOCUMENT_NUMERIC)
+    @Pattern(regexp = Constants.DOCUMENT_REG_EXP, message = Constants.EXCEPTION_USER_DOCUMENT_NUMERIC)
     private String document;
 
     @NotBlank(message = Constants.EXCEPTION_USER_PHONE_MANDATORY)
     @Size(max = Constants.MAX_USER_PHONE_CHARACTERS, message = Constants.EXCEPTION_USER_PHONE_MAX_LENGTH)
-    @Pattern(regexp = "^\\+?\\d+$", message = Constants.EXCEPTION_USER_PHONE_INVALID)
+    @Pattern(regexp = Constants.PHONE_REG_EXP, message = Constants.EXCEPTION_USER_PHONE_INVALID)
     private String phone;
 
     @NotNull(message = Constants.EXCEPTION_USER_BIRTHDATE_MANDATORY)

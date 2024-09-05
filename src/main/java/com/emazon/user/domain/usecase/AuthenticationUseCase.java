@@ -5,7 +5,6 @@ import com.emazon.user.domain.exceptions.*;
 import com.emazon.user.domain.model.Authentication;
 import com.emazon.user.domain.model.Login;
 import com.emazon.user.domain.model.User;
-import com.emazon.user.domain.spi.IRolePersistencePort;
 import com.emazon.user.domain.spi.ISecurityPersistencePort;
 import com.emazon.user.domain.spi.IUserPersistencePort;
 
