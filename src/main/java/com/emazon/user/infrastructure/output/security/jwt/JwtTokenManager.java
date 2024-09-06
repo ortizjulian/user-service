@@ -1,6 +1,7 @@
 package com.emazon.user.infrastructure.output.security.jwt;
 
 import com.emazon.user.infrastructure.output.security.entity.SecurityUser;
+import com.emazon.user.utils.Constants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -30,7 +31,7 @@ public class JwtTokenManager {
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            @NotNull UserDetails userDetails
+            @NotNull SecurityUser userDetails
 
     ) {
         String role = userDetails.getAuthorities()
@@ -41,7 +42,8 @@ public class JwtTokenManager {
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
-                .claim("role",role )
+                .claim(Constants.CLAIM_ROLE,role )
+                .claim(Constants.CLAIM_ID, userDetails.getId())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)

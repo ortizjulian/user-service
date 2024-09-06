@@ -1,16 +1,12 @@
 package com.emazon.user.domain.usecase;
 
-import com.emazon.user.domain.exceptions.AgeNotValidException;
-import com.emazon.user.domain.exceptions.DocumentAlreadyExistsException;
-import com.emazon.user.domain.exceptions.EmailAlreadyExistsException;
+import com.emazon.user.domain.exceptions.UserNotFoundException;
 import com.emazon.user.domain.model.Authentication;
-import com.emazon.user.domain.model.Role;
+import com.emazon.user.domain.model.Login;
 import com.emazon.user.domain.model.User;
-import com.emazon.user.domain.spi.IAuthenticationPersistencePort;
-import com.emazon.user.domain.spi.IRolePersistencePort;
 import com.emazon.user.domain.spi.ISecurityPersistencePort;
 import com.emazon.user.domain.spi.IUserPersistencePort;
-import com.emazon.user.utils.Constants;
+import com.emazon.user.infrastructure.exceptions.InvalidCredentialsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -29,12 +25,6 @@ class AuthenticationUseCaseTest {
     private IUserPersistencePort userPersistencePort;
 
     @Mock
-    private IRolePersistencePort rolePersistencePort;
-
-    @Mock
-    private IAuthenticationPersistencePort authenticationPersistencePort;
-
-    @Mock
     private ISecurityPersistencePort securityPersistencePort;
 
     @InjectMocks
@@ -46,101 +36,67 @@ class AuthenticationUseCaseTest {
     }
 
     @Test
-    void AuthenticationUseCae_Register_ShouldReturnTokenWhenUserIsRegistered() {
+    void AuthenticationUseCase_Login_WhenValidCredentials_ShouldReturnToken(){
+        Login login = new Login("julianito@ortixs@gmail.com", "12345678");
         User user = new User(
                 null,
                 "Julian",
                 "Ortiz",
-                "SEGURA",
-                "julian.ortiz@gmail.com",
-                "10203040",
-                "192939",
-                LocalDate.of(2000, 10, 10),
-                null
-        );
-        Mockito.when(userPersistencePort.existsByEmail("julian.ortiz@gmail.com")).thenReturn(false);
-        Mockito.when(userPersistencePort.existsByDocument("10203040")).thenReturn(false);
-        Mockito.when(securityPersistencePort.encryptPassword("SEGURA")).thenReturn("encryptedPassword");
-        Mockito.when(authenticationPersistencePort.register(user)).thenReturn(user);
-        Mockito.when(securityPersistencePort.getToken(user)).thenReturn(new Authentication("token"));
-        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSEASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
-        Authentication response = authenticationUseCase.register(user, Constants.ROLE_WAREHOUSEASSISTANT);
-
-        assertEquals("token", response.getToken());
-    }
-
-    @Test
-    void AuthenticationUseCase_Register_ShouldThrowExceptionWhenUserIsNotAdult() {
-        User user = new User(
-                null,
-                "Julian",
-                "Ortiz",
-                "SEGURA",
-                "julian.ortiz@gmail.com",
+                "12345678",
+                "julianito@ortixs@gmail.com",
                 "10203040",
                 "192939",
                 LocalDate.of(2020, 10, 10),
                 null
         );
 
-        Mockito.when(userPersistencePort.existsByEmail("julian.ortiz@gmail.com")).thenReturn(false);
-        Mockito.when(userPersistencePort.existsByDocument("10203040")).thenReturn(false);
-        Mockito.when(securityPersistencePort.encryptPassword("SEGURA")).thenReturn("encryptedPassword");
-        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSEASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
+        Mockito.when(userPersistencePort.findByEmail(login.getEmail())).thenReturn(Optional.of(user));
+        Mockito.doNothing().when(securityPersistencePort).authenthicate(login);
 
-        assertThrows(AgeNotValidException.class, () -> {
-            authenticationUseCase.register(user, Constants.ROLE_WAREHOUSEASSISTANT);
-        });
+        Authentication authentication = new Authentication("GeneratedToken");
 
+        Mockito.when(securityPersistencePort.getToken(user)).thenReturn(authentication);
+
+        Authentication result = authenticationUseCase.login(login);
+
+        assertNotNull(result.getToken());
+        assertEquals("GeneratedToken", result.getToken());
     }
 
     @Test
-    void AuthenticationUseCase_Register_ShouldThrowExceptionWhenEmailAlreadyExists() {
+    void AuthenticationUseCase_Login_WhenEmailDoesNotExists_ShouldThrowExceptionUserNotFound(){
+        Login login = new Login("julianito@ortixs@gmail.com", "12345678");
+
+        Mockito.when(userPersistencePort.findByEmail(login.getEmail())).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> {
+            authenticationUseCase.login(login);
+        });
+    }
+
+    @Test
+    void AuthenticationUseCase_Login_WhenWrongPassword_ShouldThrowExceptionInvalidCredentials(){
+        Login login = new Login("julianito@ortixs@gmail.com", "12345678");
+
+        Mockito.when(userPersistencePort.findByEmail(login.getEmail())).thenReturn(Optional.empty());
+
         User user = new User(
                 null,
                 "Julian",
                 "Ortiz",
                 "SEGURA",
-                "julian.ortiz@gmail.com",
+                "julianito@ortixs@gmail.com",
                 "10203040",
                 "192939",
-                LocalDate.of(2000, 10, 10),
+                LocalDate.of(2020, 10, 10),
                 null
         );
 
-        Mockito.when(userPersistencePort.existsByEmail("julian.ortiz@gmail.com")).thenReturn(true); // Correo ya existe
-        Mockito.when(userPersistencePort.existsByDocument("10203040")).thenReturn(false);
-        Mockito.when(securityPersistencePort.encryptPassword("SEGURA")).thenReturn("encryptedPassword");
-        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSEASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
+        Mockito.when(userPersistencePort.findByEmail(login.getEmail())).thenReturn(Optional.of(user));
+        Mockito.doThrow(InvalidCredentialsException.class).when(securityPersistencePort).authenthicate(login);
 
-       assertThrows(EmailAlreadyExistsException.class, () -> {
-            authenticationUseCase.register(user, Constants.ROLE_WAREHOUSEASSISTANT);
+        assertThrows(InvalidCredentialsException.class, () -> {
+            authenticationUseCase.login(login);
         });
     }
-
-    @Test
-    void AuthenticationUseCase_Register_ShouldThrowExceptionWhenDocumentAlreadyExists() {
-        User user = new User(
-                null,
-                "Julian",
-                "Ortiz",
-                "SEGURA",
-                "julian.ortiz@gmail.com",
-                "10203040",
-                "192939",
-                LocalDate.of(2000, 10, 10),
-                null
-        );
-
-        Mockito.when(userPersistencePort.existsByEmail("julian.ortiz@gmail.com")).thenReturn(false);
-        Mockito.when(userPersistencePort.existsByDocument("10203040")).thenReturn(true); // Documento ya existe
-        Mockito.when(securityPersistencePort.encryptPassword("SEGURA")).thenReturn("encryptedPassword");
-        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSEASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
-
-        assertThrows(DocumentAlreadyExistsException.class, () -> {
-            authenticationUseCase.register(user, Constants.ROLE_WAREHOUSEASSISTANT);
-        });
-
-    }
-
 }

@@ -6,16 +6,28 @@ public class Constants {
     }
 
     public static final String UTILITY_CLASS_SHOULD_NOT_BE_INSTANTIATED = "Utility class should not be instantiated";
-    
+
+    //Register Dto
     public static final int MAX_USER_PHONE_CHARACTERS = 13;
     public static final int MIN_USER_PASSWORD_CHARACTERS = 8;
+    public static final String DOCUMENT_REG_EXP = "\\d+";
+    public static final String PHONE_REG_EXP = "^\\+?\\d+$";
+
+    //Jwt Claims
+    public static final String CLAIM_ROLE = "role";
+    public static final String CLAIM_ID = "id";
 
     //Roles names
-    public static final String ROLE_WAREHOUSEASSISTANT = "Aux_bodega";
+    public static final String ROLE_WAREHOUSE_ASSISTANT = "Aux_bodega";
 
     //Exceptions messages
     public static final String RESPONSE_MESSAGE_KEY = "Message";
     public static final String EXCEPTION_INVALID_JSON_FORMAT = "Invalid JSON format";
+
+    //Auth
+    public static final String EXCEPTION_INVALID_CREDENTIALS = "Invalid credentials provided";
+    public static final String EXCEPTION_AUTHENTICATION_EXCEPTION = "Authentication exception occurred";
+    public static final String EXCEPTION_ACCESS_DENIED= "Access Denied";
 
     //User Exceptions
     public static final String EXCEPTION_USER_NOT_FOUND ="User not found";

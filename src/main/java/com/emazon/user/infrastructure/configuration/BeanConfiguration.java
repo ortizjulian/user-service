@@ -1,12 +1,12 @@
 package com.emazon.user.infrastructure.configuration;
 
 import com.emazon.user.domain.api.IAuthenticationServicePort;
-import com.emazon.user.domain.spi.IAuthenticationPersistencePort;
+import com.emazon.user.domain.api.IUserServicePort;
 import com.emazon.user.domain.spi.IRolePersistencePort;
 import com.emazon.user.domain.spi.ISecurityPersistencePort;
 import com.emazon.user.domain.spi.IUserPersistencePort;
 import com.emazon.user.domain.usecase.AuthenticationUseCase;
-import com.emazon.user.infrastructure.output.jpa.adapter.AuthenticationJpaAdapter;
+import com.emazon.user.domain.usecase.UserUseCase;
 import com.emazon.user.infrastructure.output.jpa.adapter.RoleJpaAdapter;
 import com.emazon.user.infrastructure.output.jpa.adapter.UserJpaAdapter;
 import com.emazon.user.infrastructure.output.jpa.entity.UserEntity;
@@ -42,11 +42,8 @@ public class BeanConfiguration {
     private final UserEntityMapper userEntityMapper;
     private final RoleEntityMapper roleEntityMapper;
     private final JwtTokenManager jwtTokenManager;
+    private final AuthenticationConfiguration authenticationConfiguration;
 
-    @Bean
-    public IAuthenticationPersistencePort authenticationPersistencePort(){
-        return new AuthenticationJpaAdapter(userRepository,roleRepository,userEntityMapper);
-    }
     @Bean
     public IRolePersistencePort rolePersistencePort(){
         return new RoleJpaAdapter(roleRepository,roleEntityMapper);
@@ -54,17 +51,28 @@ public class BeanConfiguration {
 
     @Bean
     public IUserPersistencePort userPersistencePort(){
-        return new UserJpaAdapter(userRepository);
+        return new UserJpaAdapter(userRepository,userEntityMapper,roleRepository);
     }
 
     @Bean
-    public ISecurityPersistencePort securityPersistencePort(){
-        return new SecurityAdapter(encoder(),jwtTokenManager);
+    public IAuthenticationServicePort authenticationServicePort() throws Exception {
+        return new AuthenticationUseCase(userPersistencePort(),securityPersistencePort() );
     }
 
     @Bean
-    public IAuthenticationServicePort authenticationServicePort(){
-        return new AuthenticationUseCase(authenticationPersistencePort(), rolePersistencePort(),userPersistencePort(),securityPersistencePort() );
+    public IUserServicePort userServicePort() throws Exception {
+        return new UserUseCase(rolePersistencePort(),userPersistencePort(),securityPersistencePort());
+    }
+
+    @Bean
+    public ISecurityPersistencePort securityPersistencePort() throws Exception {
+        return new SecurityAdapter(encoder(),jwtTokenManager,authenticationManager(authenticationConfiguration));
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
+        return config.getAuthenticationManager();
     }
 
     @Bean
@@ -74,14 +82,8 @@ public class BeanConfiguration {
                     .orElseThrow(() -> new UsernameNotFoundException(Constants.EXCEPTION_USER_NOT_FOUND));
             Set<String> role = new HashSet<>();
             role.add(userEntity.getRoleEntity().getName());
-            return new SecurityUser(userEntity.getEmail(), role);
+            return new SecurityUser(userEntity.getId(),userEntity.getEmail(),userEntity.getPassword(), role);
         };
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception {
-        return config.getAuthenticationManager();
     }
 
     @Bean
