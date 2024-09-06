@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class ConfigFilter {
                         authorizeHttpRequests
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
+                                .requestMatchers("/user/**").hasAuthority("Administrador")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
@@ -36,4 +38,5 @@ public class ConfigFilter {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 }
