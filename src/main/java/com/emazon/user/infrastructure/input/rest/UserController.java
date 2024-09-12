@@ -1,11 +1,8 @@
 package com.emazon.user.infrastructure.input.rest;
 
-
-import com.emazon.user.application.dto.AuthenticationDtoResponse;
 import com.emazon.user.application.dto.RegisterDtoRequest;
 import com.emazon.user.application.handler.IAuthenticationHandler;
 import com.emazon.user.application.handler.IUserHandler;
-import com.emazon.user.domain.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
