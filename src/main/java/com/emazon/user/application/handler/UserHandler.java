@@ -17,12 +17,17 @@ public class UserHandler implements IUserHandler {
 
     private final IUserServicePort userServicePort;
     private final RegisterDtoRequestMapper registerDtoRequestMapper;
-    private final AuthenticationDtoResponseMapper authenticationDtoResponseMapper;
 
     @Override
-    public User registerWareHouseAssistan(RegisterDtoRequest registerRequest) {
-        User user = registerDtoRequestMapper.registerDtoRequestToUser(registerRequest);
+    public User registerWareHouseAssistan(RegisterDtoRequest registerDtoRequest) {
+        User user = registerDtoRequestMapper.registerDtoRequestToUser(registerDtoRequest);
         return userServicePort.register(user, Constants.ROLE_WAREHOUSE_ASSISTANT);
+    }
+
+    @Override
+    public User registerClient(RegisterDtoRequest registerDtoRequest) {
+        User user = registerDtoRequestMapper.registerDtoRequestToUser(registerDtoRequest);
+        return userServicePort.register(user, Constants.ROLE_CLIENT);
 
     }
 }
