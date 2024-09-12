@@ -11,16 +11,19 @@ import com.emazon.user.domain.spi.IUserPersistencePort;
 import com.emazon.user.utils.Constants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class UserUseCaseTest {
 
     @Mock
@@ -59,7 +62,7 @@ class UserUseCaseTest {
         Mockito.when(userPersistencePort.register(user)).thenReturn(user);
         Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSE_ASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
 
-        User registeredUser = userPersistencePort.register(user);
+        User registeredUser = userUseCase.register(user, Constants.ROLE_WAREHOUSE_ASSISTANT);
         assertEquals(user, registeredUser);
     }
 
@@ -79,8 +82,6 @@ class UserUseCaseTest {
 
         Mockito.when(userPersistencePort.existsByEmail("julian.ortiz@gmail.com")).thenReturn(false);
         Mockito.when(userPersistencePort.existsByDocument("10203040")).thenReturn(false);
-        Mockito.when(securityPersistencePort.encryptPassword("SEGURA")).thenReturn("encryptedPassword");
-        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSE_ASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
 
         assertThrows(AgeNotValidException.class, () -> {
             userUseCase.register(user, Constants.ROLE_WAREHOUSE_ASSISTANT);
@@ -104,8 +105,6 @@ class UserUseCaseTest {
 
         Mockito.when(userPersistencePort.existsByEmail("julian.ortiz@gmail.com")).thenReturn(true);
 
-        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSE_ASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
-
        assertThrows(EmailAlreadyExistsException.class, () -> {
            userUseCase.register(user, Constants.ROLE_WAREHOUSE_ASSISTANT);
         });
@@ -127,7 +126,6 @@ class UserUseCaseTest {
 
         Mockito.when(userPersistencePort.existsByEmail("julian.ortiz@gmail.com")).thenReturn(false);
         Mockito.when(userPersistencePort.existsByDocument("10203040")).thenReturn(true);
-        Mockito.when(rolePersistencePort.findByName(Constants.ROLE_WAREHOUSE_ASSISTANT)).thenReturn(Optional.of(new Role(1L, "Cliente", "Rol CLiente")));
 
         assertThrows(DocumentAlreadyExistsException.class, () -> {
             userUseCase.register(user, Constants.ROLE_WAREHOUSE_ASSISTANT);
