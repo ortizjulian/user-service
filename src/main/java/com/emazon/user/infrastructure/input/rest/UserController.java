@@ -1,5 +1,6 @@
 package com.emazon.user.infrastructure.input.rest;
 
+
 import com.emazon.user.application.dto.AuthenticationDtoResponse;
 import com.emazon.user.application.dto.RegisterDtoRequest;
 import com.emazon.user.application.handler.IAuthenticationHandler;
@@ -25,7 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final IUserHandler userHandler;
+
     private final IAuthenticationHandler authenticationHandler;
+
 
     @Operation(
             summary = "Register a new warehouse assistant",
@@ -33,7 +36,9 @@ public class UserController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully registered"),
+
             @ApiResponse(responseCode = "404", description = "Role not found"),
+
             @ApiResponse(responseCode = "400", description = "Invalid request, check the submitted data"),
     })
     @PostMapping("/register/aux-bodega")
@@ -56,4 +61,5 @@ public class UserController {
         userHandler.registerClient(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
 }
