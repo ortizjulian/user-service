@@ -17,9 +17,9 @@ import java.time.Period;
 
 public class UserUseCase implements IUserServicePort {
 
-    private final IRolePersistencePort rolePersistencePort;
-    private final IUserPersistencePort userPersistencePort;
-    private final ISecurityPersistencePort securityPersistencePort;
+    private IRolePersistencePort rolePersistencePort;
+    private IUserPersistencePort userPersistencePort;
+    private ISecurityPersistencePort securityPersistencePort;
 
     public UserUseCase( IRolePersistencePort rolePersistencePort, IUserPersistencePort userPersistencePort, ISecurityPersistencePort securityPersistencePort) {
         this.rolePersistencePort = rolePersistencePort;
