@@ -51,7 +51,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Role not found"),
             @ApiResponse(responseCode = "400", description = "Invalid request, check the submitted data"),
     })
-    @PostMapping("/register/client")
+    @PostMapping("/register/cliente")
     public ResponseEntity<Void> registerClient(@Valid @RequestBody RegisterDtoRequest registerRequest) {
         userHandler.registerClient(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
