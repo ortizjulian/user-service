@@ -19,6 +19,8 @@ public class Constants {
 
     //Roles names
     public static final String ROLE_WAREHOUSE_ASSISTANT = "Aux_bodega";
+    public static final String ROLE_ADMIN = "Administrador";
+    public static final String ROLE_CLIENT = "Cliente";
 
     //Exceptions messages
     public static final String RESPONSE_MESSAGE_KEY = "Message";

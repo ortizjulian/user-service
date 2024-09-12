@@ -1,6 +1,7 @@
 package com.emazon.user.infrastructure.configuration;
 
 import com.emazon.user.infrastructure.output.security.jwt.JwtAuthenticationFilter;
+import com.emazon.user.utils.Constants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,7 @@ public class ConfigFilter {
                         authorizeHttpRequests
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
-                                .requestMatchers("/user/**").hasAuthority("Administrador")
+                                .requestMatchers("/user/**").hasAuthority(Constants.ROLE_ADMIN)
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
