@@ -19,8 +19,11 @@ public class Constants {
 
     //Roles names
     public static final String ROLE_WAREHOUSE_ASSISTANT = "Aux_bodega";
+<<<<<<< feature/h10-create-client
     public static final String ROLE_ADMIN = "Administrador";
     public static final String ROLE_CLIENT = "Cliente";
+=======
+>>>>>>> development
 
     //Exceptions messages
     public static final String RESPONSE_MESSAGE_KEY = "Message";
