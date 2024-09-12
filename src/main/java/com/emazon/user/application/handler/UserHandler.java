@@ -1,7 +1,6 @@
 package com.emazon.user.application.handler;
 
 import com.emazon.user.application.dto.RegisterDtoRequest;
-import com.emazon.user.application.mapper.AuthenticationDtoResponseMapper;
 import com.emazon.user.application.mapper.RegisterDtoRequestMapper;
 import com.emazon.user.domain.api.IUserServicePort;
 import com.emazon.user.domain.model.User;
