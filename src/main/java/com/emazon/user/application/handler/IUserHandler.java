@@ -5,4 +5,5 @@ import com.emazon.user.domain.model.User;
 
 public interface IUserHandler {
     User registerWareHouseAssistan(RegisterDtoRequest requisterRequest);
+    User registerClient(RegisterDtoRequest registerDtoRequest);
 }
