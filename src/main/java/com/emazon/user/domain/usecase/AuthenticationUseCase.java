@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public class AuthenticationUseCase implements IAuthenticationServicePort {
 
-    private final IUserPersistencePort userPersistencePort;
-    private final ISecurityPersistencePort securityPersistencePort;
+    private IUserPersistencePort userPersistencePort;
+    private ISecurityPersistencePort securityPersistencePort;
 
     public AuthenticationUseCase( IUserPersistencePort userPersistencePort, ISecurityPersistencePort securityPersistencePort) {
         this.userPersistencePort = userPersistencePort;
