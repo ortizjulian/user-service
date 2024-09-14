@@ -11,6 +11,7 @@ import com.emazon.user.domain.spi.IRolePersistencePort;
 import com.emazon.user.domain.spi.ISecurityPersistencePort;
 import com.emazon.user.domain.spi.IUserPersistencePort;
 import com.emazon.user.utils.Constants;
+import com.emazon.user.utils.SecurityConstants;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -27,7 +28,6 @@ public class UserUseCase implements IUserServicePort {
         this.securityPersistencePort = securityPersistencePort;
     }
 
-    @Override
     public User register(User user, String roleName) {
         if (userPersistencePort.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyExistsException(Constants.EXCEPTION_EMAIL_ALREADY_EXISTS + user.getEmail());
@@ -48,5 +48,15 @@ public class UserUseCase implements IUserServicePort {
 
         user.setPassword(securityPersistencePort.encryptPassword(user.getPassword()));
         return userPersistencePort.register(user);
+    }
+
+    @Override
+    public User registerWareHouseAssistant(User user) {
+        return this.register(user, SecurityConstants.ROLE_WAREHOUSE_ASSISTANT);
+    }
+
+    @Override
+    public User registerClient(User user) {
+        return this.register(user, SecurityConstants.ROLE_CLIENT);
     }
 }

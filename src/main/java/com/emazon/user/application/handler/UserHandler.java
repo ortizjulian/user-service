@@ -20,13 +20,12 @@ public class UserHandler implements IUserHandler {
     @Override
     public User registerWareHouseAssistan(RegisterDtoRequest registerDtoRequest) {
         User user = registerDtoRequestMapper.registerDtoRequestToUser(registerDtoRequest);
-        return userServicePort.register(user, Constants.ROLE_WAREHOUSE_ASSISTANT);
+        return userServicePort.registerWareHouseAssistant(user);
     }
 
     @Override
     public User registerClient(RegisterDtoRequest registerDtoRequest) {
         User user = registerDtoRequestMapper.registerDtoRequestToUser(registerDtoRequest);
-        return userServicePort.register(user, Constants.ROLE_CLIENT);
-
+        return userServicePort.registerClient(user);
     }
 }
