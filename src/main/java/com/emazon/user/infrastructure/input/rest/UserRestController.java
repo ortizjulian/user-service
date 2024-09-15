@@ -1,7 +1,6 @@
 package com.emazon.user.infrastructure.input.rest;
 
 import com.emazon.user.application.dto.RegisterDtoRequest;
-import com.emazon.user.application.handler.IAuthenticationHandler;
 import com.emazon.user.application.handler.IUserHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,12 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("user")
 @RequiredArgsConstructor
 @Validated
-public class UserController {
+public class UserRestController {
 
     private final IUserHandler userHandler;
-
-    private final IAuthenticationHandler authenticationHandler;
-
 
     @Operation(
             summary = "Register a new warehouse assistant",
@@ -40,7 +36,7 @@ public class UserController {
     })
     @PostMapping("/register/aux-bodega")
     public ResponseEntity<Void> register(@Valid @RequestBody RegisterDtoRequest registerRequest) {
-        userHandler.registerWareHouseAssistan(registerRequest);
+        userHandler.registerWareHouseAssistant(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

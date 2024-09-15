@@ -4,7 +4,6 @@ import com.emazon.user.application.dto.RegisterDtoRequest;
 import com.emazon.user.application.mapper.RegisterDtoRequestMapper;
 import com.emazon.user.domain.api.IUserServicePort;
 import com.emazon.user.domain.model.User;
-import com.emazon.user.utils.Constants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +17,7 @@ public class UserHandler implements IUserHandler {
     private final RegisterDtoRequestMapper registerDtoRequestMapper;
 
     @Override
-    public User registerWareHouseAssistan(RegisterDtoRequest registerDtoRequest) {
+    public User registerWareHouseAssistant(RegisterDtoRequest registerDtoRequest) {
         User user = registerDtoRequestMapper.registerDtoRequestToUser(registerDtoRequest);
         return userServicePort.registerWareHouseAssistant(user);
     }

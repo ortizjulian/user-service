@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("auth")
 @RequiredArgsConstructor
 @Validated
-public class AuthenticateController {
+public class AuthenticateRestController {
     private final IAuthenticationHandler authenticationHandler;
 
     @Operation(
