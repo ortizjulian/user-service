@@ -52,13 +52,13 @@ public class ControllerAdvisor {
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<Object> handleEmailAlreadyExistsException(EmailAlreadyExistsException emailAlreadyExistsException) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Collections.singletonMap(MESSAGE, emailAlreadyExistsException.getMessage()));
     }
 
     @ExceptionHandler(DocumentAlreadyExistsException.class)
     public ResponseEntity<Object> handleDocumentAlreadyExistsException(DocumentAlreadyExistsException documentAlreadyExistsException) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Collections.singletonMap(MESSAGE, documentAlreadyExistsException.getMessage()));
     }
 
