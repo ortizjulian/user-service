@@ -28,7 +28,7 @@ public class UserUseCase implements IUserServicePort {
         this.securityPersistencePort = securityPersistencePort;
     }
 
-    public User register(User user, String roleName) {
+    private User register(User user, String roleName) {
         if (userPersistencePort.existsByEmail(user.getEmail())) {
             throw new EmailAlreadyExistsException(Constants.EXCEPTION_EMAIL_ALREADY_EXISTS + user.getEmail());
         }
